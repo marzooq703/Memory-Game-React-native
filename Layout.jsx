@@ -9,6 +9,8 @@ export default function Layout() {
 	const [matches, setMatches] = useState(0);
 	const [activeKeys, setActiveKeys] = useState([]);
 	const [completed, setCompleted] = useState([]);
+
+	// Return a sorted Array of Alphabets
 	const getAlphabets = () => {
 		const renderList = [];
 		const UTF_16 = [
@@ -21,6 +23,7 @@ export default function Layout() {
 				renderList.push(tempAlphabets);
 			}
 		});
+		// Randomly sorting the values of each array
 		for (let i = 0; i < 4; i++) {
 			renderList[i].sort(function (a, b) {
 				return 0.5 - Math.random();
@@ -28,7 +31,11 @@ export default function Layout() {
 		}
 		return renderList;
 	};
-	const [sort, setSort]= useState(getAlphabets());
+
+	// setting the alphabets to the State for rendring
+	const [sort, setSort] = useState(getAlphabets());
+
+	// This handle the press event of the card
 	const onCardPress = (key, alphabet) => {
 		setNumberOfPresses(numberOfPresses + 1);
 		let tempActiveKeys = [];
@@ -37,34 +44,38 @@ export default function Layout() {
 			setActiveKeys(tempActiveKeys);
 		}
 		if (activeKeys.length === 1) {
-      tempActiveKeys = [key, ...activeKeys];
+			tempActiveKeys = [key, ...activeKeys];
 			setActiveKeys(tempActiveKeys);
 			// Closing the opened box
-      console.log("activeKeys", activeKeys);
-      console.log("key", key);
-      if (activeKeys[0].charAt(0) == alphabet) {
-        setCompleted([alphabet, ...completed]);
-        setMatches(matches + 1);
-      }
+			console.log('activeKeys', activeKeys);
+			console.log('key', key);
+			if (activeKeys[0].charAt(0) == alphabet) {
+				setCompleted([alphabet, ...completed]);
+				setMatches(matches + 1);
+			}
 			setTimeout(() => {
-        setActiveKeys([]);
+				setActiveKeys([]);
 			}, 100);
 		}
 	};
+
+	// Generates keys based on our algorithm
+	// since we only compare 2 set of values for each alphabet
+	// we're getting randomly changing the order of the row
 	const keyGenerator = (alphabet, i) => {
 		let index = i;
 		if (index === 0) index = 1;
 		if (index === 3) index = 2;
 		return `${alphabet}${index}`;
 	};
-  const handleReset = () => {
-    console.log('reset');
-    setSort(getAlphabets());
-    setNumberOfPresses(0);
-    setMatches(0);
-    setActiveKeys([]);
-    setCompleted([]);
-  }
+	const handleReset = () => {
+		console.log('reset');
+		setSort(getAlphabets());
+		setNumberOfPresses(0);
+		setMatches(0);
+		setActiveKeys([]);
+		setCompleted([]);
+	};
 	return (
 		<>
 			<Counter value={numberOfPresses} matches={matches} />
@@ -85,7 +96,7 @@ export default function Layout() {
 					</View>
 				))}
 			</View>
-      <Reset onReset={handleReset} />
+			<Reset onReset={handleReset} />
 		</>
 	);
 }
