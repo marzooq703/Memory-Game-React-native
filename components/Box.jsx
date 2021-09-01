@@ -1,34 +1,36 @@
-import * as React from 'react';
-import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
+import React from 'react';
+import { TouchableOpacity, Text } from 'react-native';
 import { Card } from 'react-native-paper';
 
-export default function box(props) {
-  const { value, uniqueKey } = props;
-  console.log(uniqueKey);
-  const onCardPress = () => {
-    console.log("hey!", uniqueKey);
-  }
+export default function Box(props) {
+  const { value, uniqueKey, onCardPress, active, completed } = props;
+  const containerStyles = (type) => {
+    const colorChooser = () => {
+      if (active && !completed) return 'red';
+      if (completed) return 'grey';
+      return 'transparent';
+    }
+    if(type == 'container') return {
+      padding: 30,
+      width: 80,
+      height: 100,
+      backgroundColor: colorChooser()
+    } 
+    if (type == 'text') return {
+      color: 'white',
+    fontSize: 20,
+    fontWeight: 'bold',
+    }
+  } 
   return (
     <TouchableOpacity
-        onPress={onCardPress}
+        onPress={() => (!active && !completed) && onCardPress(uniqueKey, value)}
       >
-    <Card style={styles.container}>
-      <Text style={styles.text}>
-        {value}
+    <Card style={containerStyles('container')}>
+      <Text style={containerStyles('text')}>
+        {active && value}
       </Text>
     </Card>
     </TouchableOpacity>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    padding: 20,
-    width: 80,
-    height: 100,
-    backgroundColor: 'red'
-  },
-  text: {
-    color: 'white',
-  }
-});
